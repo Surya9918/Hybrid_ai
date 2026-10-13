@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+
+  <Identity
+    Name="AuraCompanion.Desktop"
+    ProcessorArchitecture="arm64"
+    Publisher="CN=AuraOSFoundation, O=AURA, C=US"
+    Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>AURA Companion</DisplayName>
+    <PublisherDisplayName>AURA Systems</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>Hitodama Replica Local-First AI Desktop Companion for Windows on ARM64</Description>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22621.0" />
+    <PackageDependency Name="Microsoft.WindowsAppRuntime.1.5" MinVersion="5001.70.1338.0" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App" Executable="$targetnametargetfolder$\AuraCompanion.exe" EntryPoint="$targetentrypoint$">
+      <uap:VisualElements
+        DisplayName="AURA Companion"
+        Description="Hitodama Replica Local-First AI Desktop Companion"
+        BackgroundColor="#0B0C10"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile ShortName="AURA" Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#0B0C10" />
+      </uap:VisualElements>
+      <Extensions>
+        <!-- Start with Windows autorun registration -->
+        <uap:Extension Category="windows.startupTask" Executable="$targetnametargetfolder$\AuraCompanion.exe" EntryPoint="$targetentrypoint$">
+          <uap:StartupTask TaskId="AuraCompanionStartup" Enabled="true" DisplayName="AURA Companion Startup" />
+        </uap:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <DeviceCapability Name="microphone" />
+    <uap:Capability Name="graphicsCapture" />
+  </Capabilities>
+</Package>

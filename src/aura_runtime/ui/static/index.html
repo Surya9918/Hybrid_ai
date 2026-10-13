@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA Companion — Hitodama AI Desktop Island</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Companion Header Bar -->
+    <header class="top-nav">
+      <div class="brand">
+        <div class="orb-badge">
+          <div class="pulse-glow"></div>
+          <span class="orb-core"></span>
+        </div>
+        <div>
+          <h1 class="logo-text">AURA <span>Companion</span></h1>
+          <p class="subtitle">Hitodama Local AI Engine · Snapdragon X ARM64</p>
+        </div>
+      </div>
+
+      <div class="header-badges">
+        <div class="status-pill status-offline">
+          <span class="dot"></span>
+          <span>Strict Offline Mode Active (0 B Outbound)</span>
+        </div>
+        <div class="status-pill status-hardware">
+          <span class="icon-chip">⚡</span>
+          <span id="hardwareStatusText">Qualcomm Snapdragon X Elite</span>
+        </div>
+        <button id="voicePttBtn" class="voice-btn" title="Push to Talk / Voice Dictation">
+          <span class="mic-icon">🎙️</span>
+          <span id="voiceBtnLabel">Win + Space</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <main class="main-container">
+      <!-- Left Column: Companion Orb & Dynamic HUD -->
+      <section class="companion-pane">
+        <!-- Floating Hitodama Orb Canvas Card -->
+        <div class="card orb-card">
+          <div class="card-header">
+            <span class="card-title">Hitodama Companion Orb</span>
+            <span id="orbStateBadge" class="badge badge-idle">STATE: IDLE</span>
+          </div>
+          <div class="orb-canvas-container">
+            <canvas id="orbCanvas" width="280" height="280"></canvas>
+            <div class="orb-interaction-hint">Click Orb to cycle state / test reaction</div>
+          </div>
+          <div class="orb-controls">
+            <button class="state-btn active" data-state="idle">Idle</button>
+            <button class="state-btn" data-state="listening">Listening</button>
+            <button class="state-btn" data-state="thinking">Thinking</button>
+            <button class="state-btn" data-state="speaking">Speaking</button>
+            <button class="state-btn" data-state="error">Error</button>
+          </div>
+        </div>
+
+        <!-- Agentic State Machine Pipeline Monitor -->
+        <div class="card pipeline-card">
+          <div class="card-header">
+            <span class="card-title">Agentic Execution Pipeline</span>
+            <span class="step-counter" id="activeStateText">READY</span>
+          </div>
+          <div class="fsm-pipeline" id="fsmPipeline">
+            <div class="fsm-node" data-fsm="REQUEST_RECEIVED"><span class="node-num">1</span> Request Received</div>
+            <div class="fsm-node" data-fsm="CONTEXT_RESOLVED"><span class="node-num">2</span> Context Resolved</div>
+            <div class="fsm-node" data-fsm="INTENT_CLASSIFIED"><span class="node-num">3</span> Intent Classified</div>
+            <div class="fsm-node" data-fsm="PLAN_CREATED"><span class="node-num">4</span> Plan Formulated</div>
+            <div class="fsm-node" data-fsm="ARGUMENTS_VALIDATED"><span class="node-num">5</span> Args Validated</div>
+            <div class="fsm-node" data-fsm="PERMISSION_CHECKED"><span class="node-num">6</span> Permission Checked</div>
+            <div class="fsm-node" data-fsm="AWAITING_CONFIRMATION_IF_REQUIRED"><span class="node-num">7</span> Safety Gate</div>
+            <div class="fsm-node" data-fsm="EXECUTING"><span class="node-num">8</span> Executing Tool</div>
+            <div class="fsm-node" data-fsm="COMPLETED"><span class="node-num">9</span> Verified &amp; Done</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Dynamic Desktop Island Hub -->
+      <section class="island-pane">
+        <div class="island-card">
+          <!-- Dynamic Island Tabs -->
+          <nav class="island-tabs">
+            <button class="tab-btn active" data-tab="conversation">💬 Assistant Conversation</button>
+            <button class="tab-btn" data-tab="tasks">📋 Tasks (<span id="taskCountBadge">0</span>)</button>
+            <button class="tab-btn" data-tab="reminders">⏰ Reminders (<span id="reminderCountBadge">0</span>)</button>
+            <button class="tab-btn" data-tab="security">🛡️ Privacy &amp; Memory</button>
+            <button class="tab-btn" data-tab="telemetry">⚡ Hardware Telemetry</button>
+          </nav>
+
+          <!-- Tab Content: Conversation -->
+          <div class="tab-pane active" id="tabConversation">
+            <div class="chat-history" id="chatHistory">
+              <div class="chat-message assistant">
+                <div class="avatar">A</div>
+                <div class="message-body">
+                  <div class="author-name">AURA Companion</div>
+                  <p>Welcome! I am running natively on Windows ARM64 with Qualcomm Snapdragon X Elite optimizations. All inference, memory, tasks, and reminders remain strictly local to your device.</p>
+                  <div class="suggestion-chips">
+                    <button class="chip">Open VS Code</button>
+                    <button class="chip">Remind me in 10 minutes to review telemetry</button>
+                    <button class="chip">Create high-priority task due Friday: Deploy MSIX</button>
+                    <button class="chip">Summarize this screen</button>
+                    <button class="chip">Mark my last task complete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <form id="chatForm" class="chat-input-bar">
+              <input type="text" id="userInput" placeholder="Ask AURA, launch an app, schedule a reminder, or say 'open'..." autocomplete="off">
+              <button type="submit" id="sendBtn" class="send-btn">
+                <span>Send</span>
+                <span class="key-hint">↵</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Tab Content: Tasks -->
+          <div class="tab-pane" id="tabTasks">
+            <div class="tab-action-bar">
+              <input type="text" id="taskSearchInput" placeholder="Filter tasks by keyword..." class="compact-input">
+              <button id="openNewTaskModalBtn" class="primary-action-btn">+ New Task</button>
+            </div>
+            <div class="task-list" id="taskListContainer">
+              <div class="empty-state">Loading persistent SQLite tasks...</div>
+            </div>
+          </div>
+
+          <!-- Tab Content: Reminders -->
+          <div class="tab-pane" id="tabReminders">
+            <div class="tab-action-bar">
+              <input type="text" id="nlReminderInput" placeholder="Natural language scheduler: e.g. 'in 20 mins to check battery' or 'every monday at 9am'" class="compact-input flex-1">
+              <button id="nlScheduleBtn" class="primary-action-btn">Schedule</button>
+            </div>
+            <div class="reminder-list" id="reminderListContainer">
+              <div class="empty-state">Loading reminders...</div>
+            </div>
+          </div>
+
+          <!-- Tab Content: Security & Privacy -->
+          <div class="tab-pane" id="tabSecurity">
+            <div class="security-grid">
+              <div class="sec-card">
+                <h3>Clipboard Privacy Redaction</h3>
+                <p>Test real-time exclusion of private keys, API tokens, and passwords from clipboard memory.</p>
+                <textarea id="clipboardTestInput" rows="3" placeholder="Paste an API key (e.g. sk-abc12345...), JWT token, or password..."></textarea>
+                <button id="testClipboardBtn" class="secondary-btn">Audit Clipboard Text</button>
+                <div id="clipboardResultBox" class="result-box">Audit result will display here.</div>
+              </div>
+
+              <div class="sec-card">
+                <h3>Persistent Memory &amp; Nuclear Wipe</h3>
+                <p>Full control over your personal local SQLite database.</p>
+                <div class="action-row">
+                  <button id="exportDataBtn" class="secondary-btn">Export Data (JSON)</button>
+                  <button id="nuclearWipeBtn" class="danger-btn">Nuclear Wipe All Data</button>
+                </div>
+                <div id="memoryItemsList" class="memory-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Content: Hardware Telemetry -->
+          <div class="tab-pane" id="tabTelemetry">
+            <div class="telemetry-grid">
+              <div class="telemetry-card">
+                <div class="metric-label">Target Architecture</div>
+                <div class="metric-value">ARM64 (win-arm64)</div>
+                <div class="metric-desc">Qualcomm Oryon CPU / Hexagon NPU</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="metric-label">Inference Backend</div>
+                <div class="metric-value" id="telBackend">CPU_LOCAL</div>
+                <div class="metric-desc" id="telBackendDesc">Truthful Zero-Fabrication Telemetry</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="metric-label">Storage Engine</div>
+                <div class="metric-value">SQLite WAL Mode</div>
+                <div class="metric-desc" id="telDbVer">Schema Migration V2 Active</div>
+              </div>
+              <div class="telemetry-card">
+                <div class="metric-label">Network Outbound</div>
+                <div class="metric-value">0 Bytes</div>
+                <div class="metric-desc">Strict Offline Mode Enforced</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Create Task Modal -->
+  <div id="taskModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Create Persistent Task</h3>
+        <button id="closeTaskModalBtn" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="createTaskForm">
+        <label>Task Title *</label>
+        <input type="text" id="newTaskTitle" required placeholder="e.g. Verify Hexagon NPU QNN EP">
+
+        <label>Description</label>
+        <textarea id="newTaskDesc" rows="2" placeholder="Implementation details or notes"></textarea>
+
+        <div class="form-row">
+          <div>
+            <label>Priority</label>
+            <select id="newTaskPriority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
+          <div>
+            <label>Due Date</label>
+            <input type="date" id="newTaskDueDate">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="cancelTaskModalBtn" class="secondary-btn">Cancel</button>
+          <button type="submit" class="primary-action-btn">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Destructive Confirmation Modal -->
+  <div id="confirmModal" class="modal-backdrop">
+    <div class="modal-box danger-modal">
+      <div class="modal-header">
+        <h3 id="confirmModalTitle">Confirm Action</h3>
+      </div>
+      <p id="confirmModalText">Are you sure you wish to proceed? This destructive operation cannot be undone.</p>
+      <div class="modal-footer">
+        <button id="confirmCancelBtn" class="secondary-btn">Cancel</button>
+        <button id="confirmProceedBtn" class="danger-btn">Proceed</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
